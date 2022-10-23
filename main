@@ -1,29 +1,26 @@
-pip install Riskfolio-Lib
-
 import numpy as np
 import pandas as pd
-import yfinance as yf
-import riskfolio as rp
 
-#DATES
+#defining bond macaulay duration function
 
-start_date="2022-01-01"
-end_date="2022-09-09"
+def bond_macaulay_duration(c,m,y,n):
+    macaulay_duration=((1+y)/(m*y))-((1+y+n*(c-y))/((m*c*((1+y**n-1))+m*y))
+    return macaulay_duration
 
-#TICKERS
+print(bond_macaulay_duration("","","",""))
 
-tickers=["AAPL.NS"]
-sorted_tickers=sorted(tickers)
+#defining bond convexity function
 
-#DOWNLOAD DATA
+def bond_convexity(p, par, c, f, T, dy=.01):
+    ytm=bond_ytm(p,par,T,c,f)
 
-data=yf.download(tickers, start=start_date, end=end_date)
-data = data.loc[:,('Adj Close', slice(None))]
-data.columns = tickers
+    ytm_lower=ytm-dy 
+    price_lower=bond_price(par,T,ytm_lower,c,f)
 
-#CALCULATING RETURNS
+    ytm_higher=ytm+dy 
+    price_higher=bond_price(par,T,ytm_higher,c,f)
 
-returns=data[tickers].pct_change().dropna()
-print(returns.head())
-
-
+    convexity=(price_lower+price_higher-(2*p))/p*(dy**2)
+    return convexity
+    
+    
