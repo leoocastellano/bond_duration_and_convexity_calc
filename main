@@ -23,4 +23,4 @@ def bond_convexity(p, par, c, f, T, dy=.01):
     convexity=(price_lower+price_higher-(2*p))/p*(dy**2)
     return convexity
     
-    
+print(bond_convexity("","","","",""))
